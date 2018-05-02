@@ -2,18 +2,47 @@ class Board extends React.Component {
 
     constructor() {
         super()
-        this.state = {
+        
+        playerChoice()
+       this.state = {
             squares: Array(9).fill(null), // stan początkowy, inicjalizujemy tablicę 9 elementów(kwadratów), pustych na poczatku
-            xIsNext: true
+            playerIsNext: true,
+            player: player,
+            enemy: enemy
         }
-
+        
+        enemyMove()
+        
+        playerMove()
+   }
+    
+    playerChoice() {
+            //wybór figury gracza za pomocą prompt
+           const player = prompt('Choose your figure', 'O or X?').toUpperCase();
+           if(player.length == 0) {
+            alert('Your choice is empty');
+            return
+        } else if (player.length > 2) {
+            alert('Your figure is too long. Please choose one-letter figure');
+            return
+        }
+        
+            //przypisanie figury wrogowi, w zaleznosci od tego co wybrał gracz
+            if(player == 'X') {
+               const enemy = 'O'
+            } else if (player == 'O'){
+              const  enemy = 'X'
+            } else {
+               const enemy = 'X'
+            }
     }
 
-    resetClick() {
+    resetClick() { //resetowanie gry (przyciskiem 'reset game')
+        
         this.setState({
             squares: Array(9).fill(null),
-
-        })
+            playerIsNext: true,
+      })
     }
 
 
@@ -21,18 +50,59 @@ class Board extends React.Component {
         const squares = this.state.squares.slice(); // w zmiennej squares definiujemy klikniety kwadrat
         if (calculateWinner(squares) || squares[i]) // blokujemy klikanie 1) gdy ktoś wygra || 2) klikanie kliknietego wczesniej kwadratu
             return
-        squares[i] = 'X';
-
+               
+//        squares[i] = this.state.player;
+//       
+//
+//      this.setState({
+//            squares: squares, // zmiana stanu
+//            playerIsNext: !this.state.playerIsNext
+//        })
+          
+            this.playerMove()
+        
+        //ruch komputera
+        
+//        const enemy = this.state.enemy;
+//        function randomS() {
+//            let res = Math.floor(Math.random() * 9);
+//            display(res)
+//        };
+//        randomS();
+//
+//        function display(res) {
+//            console.log(res)
+//            if (calculateWinner(squares)) {
+//                return
+//            } else if (squares[res] == squares[i] || squares[res] == enemy) {
+//                console.log('powtorka');
+//                randomS()
+//            } else {
+//                squares[res] = enemy;
+//
+//            }
+//        }
+//      
+        setTimeout(() => {
+         this.enemyMove();
+         }, 3000); 
+    }
+    
+    
+    playerMove(){
+        squares[i] = this.state.player;
         this.setState({
-            squares: squares, // zmiana stanu
-            xIsNext: !this.state.xIsNext
+            squares: squares[i], // zmiana stanu
+            playerIsNext: !this.state.playerIsNext
         })
-
-//        var res;
-
+    }
+    
+    enemyMove() {
+        
+            const enemy = this.state.enemy;
         function randomS() {
-            res = Math.floor(Math.random() * 9);
-            setTimeout(display(res), 5000)
+            let res = Math.floor(Math.random() * 9);
+            display(res)
         };
         randomS();
 
@@ -40,50 +110,49 @@ class Board extends React.Component {
             console.log(res)
             if (calculateWinner(squares)) {
                 return
-            } else if (squares[res] == 'X' || squares[res] == 'O') {
+            } else if (squares[res] == squares[i] || squares[res] == enemy) {
                 console.log('powtorka');
                 randomS()
             } else {
-                squares[res] = 'O';
+                squares[res] = enemy;
+                 this.setState({
+                 squares: squares[res], // zmiana stanu
+                 playerIsNext: !this.state.playerIsNext
+                 })
 
             }
-        }
+        }   
+   }
+    
+    
 
-    }
-
-   renderSquare(i) {
+    renderSquare(i) {
         return <Square onClick = {
             () => this.handleClick(i)
         }
         value = {
             this.state.squares[i]
         }
-        />
     }
 
     render() {
-
         let info = '';
         const winner = calculateWinner(this.state.squares);
         const draw = calculateDraw(this.state.squares);
-        //        const info = winner ? 'The winner is ' + winner : ('Next player is: ' + (this.state.xIsNext ? 'X' : 'O'))
         // sprawdzamy czy ktoś wygrał, jeżeli tak to renderujemy odpowiedni komunikat, jeżeli nie to wyświetlamy info, czyha jest następna kolejka
         if (winner) {
             info = 'The winner is ' + winner;
         } else if (draw) {
             info = 'draw';
         } else {
-            info = ('Next player is: ' + (this.state.xIsNext ? 'X' : 'O'))
+            info = ('Next player is: ' + (this.state.playerIsNext ? this.state.player : this.state.enemy))
         };
 
-
-
-
-
-        return ( <
-            div >
+      return ( <
+            div className='board'>
+              
             <
-            div > {
+            div className='info' > {
                 info
             } < /div> <
             div className = 'board-row' > {
@@ -114,15 +183,16 @@ class Board extends React.Component {
                 this.renderSquare(8)
             } <
             /div> <
-            button onClick = {
+            button className='resetGame' onClick = {
                 () => this.resetClick()
-            } > New game < /button>
+            } > Reset Game < /button>
 
             <
             /div>
         )
     }
 }
+
 
 function calculateWinner(squares) {
     const lines = [

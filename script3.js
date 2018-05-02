@@ -1,6 +1,4 @@
 
 
-
-var app = React.createElement(Board);
-ReactDOM.render( app , document.getElementById('app'));
+ReactDOM.render( < Game / > , document.getElementById('app'));
 
