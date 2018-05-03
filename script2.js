@@ -15,10 +15,8 @@ class Board extends React.Component {
 
     constructor() {
         super()
+            
         var player = prompt('Choose your figure', 'O or X?').toUpperCase();
-       
-        
-        
         if(player.length == 0) {
             alert('Your choice is empty');
             return
@@ -42,9 +40,6 @@ class Board extends React.Component {
             player: player,
             enemy: enemy
         }
-        
-        
-
     }
 
     resetClick() {
@@ -52,45 +47,28 @@ class Board extends React.Component {
         this.setState({
             squares: Array(9).fill(null),
             playerIsNext: true,
-
         })
-    
-    }
+      }
+
 
 
     handleClick(i) { // zdarzenie odpalające się w momencie klikniecia na kwadrat, zmienia stan
         const squares = this.state.squares.slice(); // w zmiennej squares definiujemy klikniety kwadrat
         if (calculateWinner(squares) || squares[i]) // blokujemy klikanie 1) gdy ktoś wygra || 2) klikanie kliknietego wczesniej kwadratu
             return
-            
-            
-       
-        
-      
-         
+
         squares[i] = this.state.player;
        
-
-      this.setState({
+        this.setState({
             squares: squares, // zmiana stanu
             playerIsNext: !this.state.playerIsNext
         })
           
         
         //ruch komputera
-        var res;
-        
-        var enemy = this.state.enemy;
-//        var enemy;
-//        if(squares[i] == 'X') {
-//            enemy = 'O'
-//        } else if (squares[i] == 'O'){
-//            enemy = 'X'
-//        } else {
-//            enemy = 'X'
-//        }
+       var enemy = this.state.enemy;
         function randomS() {
-            res = Math.floor(Math.random() * 9);
+            let res = Math.floor(Math.random() * 9);
             display(res)
         };
         randomS();
@@ -107,40 +85,9 @@ class Board extends React.Component {
 
             }
         }
+      
     }
     
-//    enemyMove(){
-//        
-//        const squares = this.state.squares.slice(); 
-//        if (calculateWinner(squares)) 
-//            return
-//
-//          var res;
-//
-//        function randomS() {
-//            res = Math.floor(Math.random() * 9);
-//            display(res)
-//        };
-//        randomS();
-//
-//        function display(res) {
-//            console.log(res)
-//            if (calculateWinner(squares)) {
-//                return
-//            } else if (squares[res] == 'X' || squares[res] == 'O') {
-//                console.log('powtorka');
-//                randomS()
-//            } else {
-//                squares[res] = 'O';
-//
-//            }
-//        }
-//    }
-//    
-    
-    
-
-
 
     renderSquare(i) {
         return <Square onClick = {
@@ -156,7 +103,6 @@ class Board extends React.Component {
         let info = '';
         const winner = calculateWinner(this.state.squares);
         const draw = calculateDraw(this.state.squares);
-        //        const info = winner ? 'The winner is ' + winner : ('Next player is: ' + (this.state.xIsNext ? 'X' : 'O'))
         // sprawdzamy czy ktoś wygrał, jeżeli tak to renderujemy odpowiedni komunikat, jeżeli nie to wyświetlamy info, czyha jest następna kolejka
         if (winner) {
             info = 'The winner is ' + winner;
@@ -211,47 +157,8 @@ class Board extends React.Component {
     }
 }
 
-
-//class Game extends React.Component {
-//    
-//
-//    render(){
-//        return (
-//            <div>
-//                <div className='game'>
-//                    <Board/>
-//                </div>
-//                <div className='gameInfo'>
-//                </div>
-//            </div>
-//            )
-//    }
-//}
-
-
 class Button extends React.Component {
-    
-//    constructor() {
-//    super();
-//    
-//    this.state = {
-//      visible: true
-//    };
-    
-//    this.handleClick = this.handleClick.bind(this);
-//  }
-    
-//onClick() {
-//    this.setState({
-//      visible: false
-//    });
-//  }
-    
-//  state = { showing: true};
   render() {
-//     if (!this.state.visible) {
-//      return null
-//    } 
     return (
       <button className='newGame' onClick = {
                 this.props.onClick
@@ -264,8 +171,7 @@ class Button extends React.Component {
 
 
 class Game extends React.Component {
-    
-    
+       
   constructor() {
     super();
     
@@ -298,10 +204,6 @@ class Game extends React.Component {
     );
   }
 }
-
-
-
-
 
 ReactDOM.render( < Game / > , document.getElementById('app'));
 

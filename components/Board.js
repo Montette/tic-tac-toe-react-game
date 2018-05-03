@@ -2,24 +2,9 @@ class Board extends React.Component {
 
     constructor() {
         super()
-        
-        playerChoice()
-       this.state = {
-            squares: Array(9).fill(null), // stan początkowy, inicjalizujemy tablicę 9 elementów(kwadratów), pustych na poczatku
-            playerIsNext: true,
-            player: player,
-            enemy: enemy
-        }
-        
-        enemyMove()
-        
-        playerMove()
-   }
-    
-    playerChoice() {
-            //wybór figury gracza za pomocą prompt
-           const player = prompt('Choose your figure', 'O or X?').toUpperCase();
-           if(player.length == 0) {
+            
+        var player = prompt('Choose your figure', 'O or X?').toUpperCase();
+        if(player.length == 0) {
             alert('Your choice is empty');
             return
         } else if (player.length > 2) {
@@ -27,79 +12,48 @@ class Board extends React.Component {
             return
         }
         
-            //przypisanie figury wrogowi, w zaleznosci od tego co wybrał gracz
-            if(player == 'X') {
-               const enemy = 'O'
-            } else if (player == 'O'){
-              const  enemy = 'X'
-            } else {
-               const enemy = 'X'
-            }
+         var enemy;
+        if(player == 'X') {
+            enemy = 'O'
+        } else if (player == 'O'){
+            enemy = 'X'
+        } else {
+            enemy = 'X'
+        }
+       
+        this.state = {
+            squares: Array(9).fill(null), // stan początkowy, inicjalizujemy tablicę 9 elementów(kwadratów), pustych na poczatku
+            playerIsNext: true,
+            player: player,
+            enemy: enemy
+        }
     }
 
-    resetClick() { //resetowanie gry (przyciskiem 'reset game')
+    resetClick() {
         
         this.setState({
             squares: Array(9).fill(null),
             playerIsNext: true,
-      })
-    }
+        })
+      }
+
 
 
     handleClick(i) { // zdarzenie odpalające się w momencie klikniecia na kwadrat, zmienia stan
         const squares = this.state.squares.slice(); // w zmiennej squares definiujemy klikniety kwadrat
         if (calculateWinner(squares) || squares[i]) // blokujemy klikanie 1) gdy ktoś wygra || 2) klikanie kliknietego wczesniej kwadratu
             return
-               
-//        squares[i] = this.state.player;
-//       
-//
-//      this.setState({
-//            squares: squares, // zmiana stanu
-//            playerIsNext: !this.state.playerIsNext
-//        })
-          
-            this.playerMove()
-        
-        //ruch komputera
-        
-//        const enemy = this.state.enemy;
-//        function randomS() {
-//            let res = Math.floor(Math.random() * 9);
-//            display(res)
-//        };
-//        randomS();
-//
-//        function display(res) {
-//            console.log(res)
-//            if (calculateWinner(squares)) {
-//                return
-//            } else if (squares[res] == squares[i] || squares[res] == enemy) {
-//                console.log('powtorka');
-//                randomS()
-//            } else {
-//                squares[res] = enemy;
-//
-//            }
-//        }
-//      
-        setTimeout(() => {
-         this.enemyMove();
-         }, 3000); 
-    }
-    
-    
-    playerMove(){
+
         squares[i] = this.state.player;
+       
         this.setState({
-            squares: squares[i], // zmiana stanu
+            squares: squares, // zmiana stanu
             playerIsNext: !this.state.playerIsNext
         })
-    }
-    
-    enemyMove() {
+          
         
-            const enemy = this.state.enemy;
+        //ruch komputera
+       var enemy = this.state.enemy;
         function randomS() {
             let res = Math.floor(Math.random() * 9);
             display(res)
@@ -115,15 +69,11 @@ class Board extends React.Component {
                 randomS()
             } else {
                 squares[res] = enemy;
-                 this.setState({
-                 squares: squares[res], // zmiana stanu
-                 playerIsNext: !this.state.playerIsNext
-                 })
 
             }
-        }   
-   }
-    
+        }
+      
+    }
     
 
     renderSquare(i) {
@@ -133,6 +83,7 @@ class Board extends React.Component {
         value = {
             this.state.squares[i]
         }
+        />
     }
 
     render() {
@@ -143,7 +94,7 @@ class Board extends React.Component {
         if (winner) {
             info = 'The winner is ' + winner;
         } else if (draw) {
-            info = 'draw';
+            info = 'The game ended with a draw.';
         } else {
             info = ('Next player is: ' + (this.state.playerIsNext ? this.state.player : this.state.enemy))
         };
@@ -192,6 +143,7 @@ class Board extends React.Component {
         )
     }
 }
+
 
 
 function calculateWinner(squares) {
