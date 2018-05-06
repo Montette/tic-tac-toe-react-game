@@ -15,8 +15,18 @@ class Board extends React.Component {
 
     constructor() {
         super()
-            
-        var player = prompt('Choose your figure', 'O or X?').toUpperCase();
+
+        this.state = {
+            squares: Array(9).fill(null), // stan początkowy, inicjalizujemy tablicę 9 elementów(kwadratów), pustych na poczatku
+            playerIsNext: true,
+            player: '',
+            enemy: ''
+        }
+    }
+    
+    componentWillMount() {
+             
+        let player = prompt('Choose your figure', 'O or X?').toUpperCase();
         if(player.length == 0) {
             alert('Your choice is empty');
             return
@@ -25,26 +35,23 @@ class Board extends React.Component {
             return
         }
         
-         var enemy;
+       let enemy;
         if(player == 'X') {
-            enemy = 'O'
+           enemy = 'O'
         } else if (player == 'O'){
             enemy = 'X'
         } else {
             enemy = 'X'
         }
-       
-        this.state = {
-            squares: Array(9).fill(null), // stan początkowy, inicjalizujemy tablicę 9 elementów(kwadratów), pustych na poczatku
-            playerIsNext: true,
+        
+        this.setState({
             player: player,
             enemy: enemy
-        }
+        })
     }
 
     resetClick() {
-        
-        this.setState({
+       this.setState({
             squares: Array(9).fill(null),
             playerIsNext: true,
         })
@@ -157,17 +164,6 @@ class Board extends React.Component {
     }
 }
 
-class Button extends React.Component {
-  render() {
-    return (
-      <button className='newGame' onClick = {
-                this.props.onClick
-            }>
-       Play New Game
-      </button>
-    );
-  }  
-}
 
 
 class Game extends React.Component {
@@ -176,17 +172,16 @@ class Game extends React.Component {
     super();
     
     this.state = {
-      clicked: false
+      clicked: false,
+        isButton: true
     };
     
     this.handleClick = this.handleClick.bind(this);
   }
   
-  handleClick() {
-    this.setState({
-      clicked: true
-    });
-  }
+  handleClick(){
+    this.setState({ clicked: true, isButton: false});
+ }
   
   render() {
     return (
@@ -194,12 +189,9 @@ class Game extends React.Component {
         <div className='header'>
         <img className='imgPicture' src="img/game.png" />
         <h1> Tic<span className='color'>.</span>Tac<span className='color'>.</span>Toe</h1>
-        
-        </div>
-        <Button onClick={this.handleClick} />
-        {this.state.clicked ? <Board /> : null}
-        
-        
+      </div>
+      {this.state.isButton ? <button className='newGame' onClick={this.handleClick} > New game </button> : null }
+        {this.state.clicked ? <Board/> : null}
       </div>
     );
   }
